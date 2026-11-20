@@ -7,8 +7,8 @@
   <meta name="description" content="Yilin Lyu — creative practice, art and marketing.">
   <title>Yilin Lyu — Creative Practice</title>
   <style>
-    @font-face { font-family: "Graduate"; src: url("资源库/home%20page/Graduate-Regular.ttf") format("truetype"); font-style: normal; font-weight: 400; font-display: swap; }
-    @font-face { font-family: "Inter"; src: url("资源库/home%20page/Inter-Variable.ttf") format("truetype"); font-style: normal; font-weight: 100 900; font-display: swap; }
+    @font-face { font-family: "Graduate"; src: url("assets/home%20page/Graduate-Regular.ttf") format("truetype"); font-style: normal; font-weight: 400; font-display: swap; }
+    @font-face { font-family: "Inter"; src: url("assets/home%20page/Inter-Variable.ttf") format("truetype"); font-style: normal; font-weight: 100 900; font-display: swap; }
     :root {
       --paper: #ffffff;
       --ink: #181816;
@@ -46,9 +46,8 @@
     .text-link { display: inline-flex; align-items: center; gap: 10px; font-size: 12px; }
     .text-link::after { content: "↘"; font-size: 15px; transition: transform .2s ease; }
     .text-link:hover::after { transform: translate(2px, 2px); }
-    .portrait-stage { width: min(100%, 450px); justify-self: end; position: relative; padding: 18px 0 0 42px; }
-    .paper { display: block; width: 76%; height: 520px; margin-left: auto; object-fit: cover; object-position: center; }
-    .portrait { position: absolute; left: 0; bottom: 56px; width: 75%; aspect-ratio: 1.54; object-fit: cover; object-position: center 43%; background: #eee; }
+    .portrait-stage { width: min(100%, 450px); height: 538px; justify-self: end; position: relative; padding: 18px 0 0 42px; }
+    .portrait { position: absolute; left: 0; bottom: 28px; width: 75%; aspect-ratio: 1.54; object-fit: cover; object-position: center 43%; background: #eee; }
     .about { position: absolute; z-index: 3; inset: 0; display: block; width: 100%; height: 100%; padding: clamp(38px, 5vw, 64px) max(56px, calc((100vw - 1320px) / 2)); overflow-y: auto; background: var(--paper); visibility: hidden; opacity: 0; transform: translateY(24px); pointer-events: none; transition: opacity .32s ease, transform .42s cubic-bezier(.2,.7,.2,1), visibility .32s ease; }
     .about.open { visibility: visible; opacity: 1; transform: translateY(0); pointer-events: auto; }
     .about-inner { overflow: visible; }
@@ -98,21 +97,38 @@
     .carousel-dot { width: 5px; height: 5px; padding: 0; border: 0; border-radius: 5px; background: #666968; cursor: pointer; transition: width .2s ease, background .2s ease; }
     .carousel-dot[aria-current="page"] { width: 20px; background: #f7f7f5; }
     .collapse-project { margin-top: 18px; padding: 0 0 4px; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--muted); font: inherit; font-size: 11px; cursor: pointer; }
-    .practice-board { display: grid; width: 100%; height: min(48vh, calc(100% - 245px)); min-height: 300px; margin: 4px 0 0; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(2, minmax(0, 1fr)); column-gap: clamp(10px, 2vw, 28px); row-gap: clamp(12px, 2vh, 22px); align-items: center; justify-items: center; }
-    .practice-card { display: grid; width: 100%; height: 100%; place-items: center; }
-    .practice-card[data-rectangle="2"] { transform: rotate(1.54deg); }
-    .practice-card[data-rectangle="1"] { transform: rotate(11.66deg); }
-    .practice-card[data-rectangle="3"] { transform: rotate(-11deg); }
-    .practice-card[data-rectangle="4"] { transform: rotate(3deg); }
-    .practice-card[data-rectangle="5"] { transform: rotate(12.48deg); }
-    .practice-card[data-rectangle="6"] { transform: rotate(-6.94deg); }
-    .practice-card[data-rectangle="7"] { transform: rotate(-2.48deg); }
-    .practice-card[data-rectangle="8"] { transform: rotate(-7.61deg); }
-    .practice-image { display: block; width: auto; height: min(100%, 24vh); max-width: 100%; aspect-ratio: 2 / 3; background: #FFFBEB; box-shadow: 1px 3px 2px -1px rgba(0,0,0,.15); }
+    .practice-board { position: relative; width: 100%; height: auto; aspect-ratio: 2.2 / 1; margin: 4px 0 0; }
+    .practice-card { position: absolute; display: block; width: clamp(190px, 26%, 340px); aspect-ratio: var(--card-ratio); padding: 0; overflow: visible; border: 0; appearance: none; background: transparent; box-shadow: 1px 2px 2px -1px rgba(0,0,0,.1); cursor: pointer; --card-lift: 0px; --card-scale: 1; transform: translate(-50%,calc(-50% + var(--card-lift))) rotate(var(--card-rotation)) scale(var(--card-scale)); transition: transform .56s cubic-bezier(.2,.85,.25,1.3), box-shadow .4s ease, filter .4s ease; }
+    .practice-card img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .practice-card[data-project="menu"] { --card-ratio: 357 / 200; --card-rotation: -8deg; left: 31.82%; top: 34%; }
+    .practice-card[data-project="as-long-as-im-here"] { --card-ratio: 1.4 / 1; --card-rotation: 8deg; left: 71.41%; top: 66%; }
+    .practice-card:hover, .practice-card:focus-visible { z-index: 4; --card-lift: -7px; --card-scale: 1.14; box-shadow: 2px 8px 14px -9px rgba(0,0,0,.17); filter: saturate(1.04); }
+    .practice-card:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
+    .practice-dialog { position: fixed; inset: 18px; width: min(1040px, calc(100vw - 36px)); max-width: none; max-height: calc(100svh - 36px); margin: auto; padding: clamp(20px, 4vw, 42px); overflow-y: auto; border: 0; background: #fff; color: var(--ink); box-shadow: 0 24px 80px rgba(0,0,0,.24); }
+    .practice-dialog::backdrop { background: rgba(20,19,17,.58); backdrop-filter: blur(5px); }
+    .practice-dialog-head { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: start; }
+    .practice-dialog-head .eyebrow { margin: 0 0 8px; }
+    .practice-dialog-title { margin: 0 0 8px; font: 400 clamp(28px, 4vw, 44px)/1.12 var(--graduate); }
+    .practice-dialog-copy { max-width: 670px; margin: 0; color: #66635d; font-size: 13px; line-height: 1.75; }
+    .practice-dialog-close { width: 38px; height: 38px; border: 1px solid var(--line); border-radius: 50%; background: transparent; font-size: 18px; cursor: pointer; transition: rotate .3s ease, background .25s ease; }
+    .practice-dialog-close:hover { rotate: 90deg; background: #f4f2ed; }
+    .practice-viewer { display: grid; grid-template-columns: 38px minmax(0,1fr) 38px; gap: 12px; align-items: center; margin-top: 26px; }
+    .practice-viewer .carousel-arrow { width: 38px; height: 38px; flex-basis: 38px; border-color: #c9c6bf; color: var(--ink); }
+    .practice-viewer .carousel-arrow:hover:not(:disabled) { background: var(--ink); color: #fff; }
+    .practice-viewer .carousel-arrow:disabled { opacity: .3; }
+    .practice-gallery { display: flex; justify-self: center; width: min(100%, 960px, 94svh); height: auto; aspect-ratio: 16 / 9; overflow-x: auto; overflow-y: hidden; background: #fff; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; overscroll-behavior-x: contain; }
+    .practice-gallery::-webkit-scrollbar { display: none; }
+    .practice-slide { display: grid; flex: 0 0 100%; width: 100%; height: 100%; margin: 0; background: #fff; place-items: center; scroll-snap-align: start; scroll-snap-stop: always; }
+    .practice-slide img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    .practice-slide a { display: grid; width: 100%; height: 100%; place-items: center; }
+    .practice-dialog-foot { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: 13px; color: var(--muted); font-size: 10px; }
+    .practice-slide-count { font-variant-numeric: tabular-nums; letter-spacing: .1em; }
+    .practice-open-pdf { border-bottom: 1px solid var(--line); padding-bottom: 3px; }
+    @media (hover: none) { .practice-card:active { --card-scale: 1.035; } }
     .footer { min-height: 64px; display: flex; justify-content: space-between; align-items: center; gap: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
     #practice.page-screen { position: relative; padding-bottom: 26px; }
-    #practice .section-head { margin-bottom: 24px; }
-    #practice .footer { margin-top: 24px; padding-top: 12px; }
+    #practice .section-head { margin-bottom: 14px; }
+    #practice .footer { margin-top: 16px; padding-top: 10px; }
     .footer .wordmark { color: var(--ink); }
     @media (max-width: 760px) {
       .shell { width: calc(100% - 40px); }
@@ -128,8 +144,8 @@
       h1 { max-width: 570px; font-size: clamp(38px, 11vw, 56px); }
       .hero-copy { max-width: 450px; }
       .portrait-stage { width: min(88%, 420px); justify-self: center; margin-right: 6%; }
-      .paper { height: min(112vw, 500px); }
-      .portrait { bottom: 50px; }
+      .portrait-stage { height: min(calc(112vw + 18px), 518px); }
+      .portrait { bottom: 22px; }
       .about-content { grid-template-columns: 1fr; gap: 24px; padding-block: 34px 42px; }
       .contact-info { gap: 20px 36px; margin-top: 0; }
       .section { padding-block: 76px 82px; }
@@ -143,9 +159,18 @@
       .carousel-dots { gap: 6px; }
       .project-pdf-link { display: inline-block; }
       .collapse-project { margin-top: 18px; }
-      .practice-board { height: min(44vh, calc(100% - 245px)); min-height: 260px; column-gap: 6px; row-gap: 8px; }
       #practice.page-screen { padding-bottom: 26px; }
       .footer { flex-wrap: wrap; padding-block: 20px; }
+      .practice-board { aspect-ratio: 1.25 / 1; }
+      .practice-card { width: 42%; }
+      .practice-card[data-project="menu"] { left: 31%; top: 31%; --card-rotation: -7deg; }
+      .practice-card[data-project="as-long-as-im-here"] { left: 72%; top: 70%; --card-rotation: 7deg; }
+      .practice-dialog { width: calc(100vw - 24px); max-height: calc(100svh - 24px); padding: 20px 14px 16px; }
+      .practice-dialog-head { gap: 12px; }
+      .practice-dialog-copy { font-size: 12px; }
+      .practice-viewer { grid-template-columns: 30px minmax(0,1fr) 30px; gap: 6px; margin-top: 20px; }
+      .practice-viewer .carousel-arrow { width: 30px; height: 30px; flex-basis: 30px; }
+      .practice-gallery { width: min(100%, 94svh); height: auto; aspect-ratio: 16 / 9; }
     }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
   </style>
@@ -165,9 +190,8 @@
           <button class="text-button" id="about-toggle" aria-expanded="false" aria-controls="about">A little about me&nbsp; +</button>
         </div>
       </div>
-      <div class="portrait-stage" aria-label="Portrait and paper texture">
-        <img class="paper" src="资源库/home%20page/打底背景（你或许会用到，可以参考我原本的设计）.png" alt="Subtle paper texture with a paper clip">
-        <img class="portrait" src="资源库/home%20page/我的照片.jpg" alt="Yilin Lyu">
+      <div class="portrait-stage" aria-label="Portrait">
+        <img class="portrait" src="assets/home%20page/我的照片.jpg" alt="Yilin Lyu">
       </div>
     </section>
     <section class="about shell" id="about" aria-hidden="true">
@@ -175,7 +199,7 @@
       <div class="about-inner"><div class="about-content">
         <h2>A little about me</h2>
         <div class="about-copy">
-          <p>A little more about me: I have an MA in Art and Politics from Goldsmiths (in case you’re wondering what that actually means, it’s about things like activist and protest art, political aesthetics, and political philosophy—and it’s a field I’m really passionate about). I also have a BA in Photography.</p>
+          <p>I have an MA in Art and Politics from Goldsmiths (in case you’re wondering what that actually means, it’s about things like activist and protest art, political aesthetics, and political philosophy—and it’s a field I’m really passionate about). I also have a BA in Photography.</p>
           <p>I work across different media and love experimenting with new techniques. I do 3D modelling and real-time rendering with Blender, Unreal Engine and Unity, and I’ve also made a few projects using 3D printing, Rhino and CAD (still learning, but getting there). Coming from a photography background, I’m also familiar with Photoshop, Illustrator, Premiere Pro, CapCut, After Effects—and, oh and Figma.</p>
           <p>Anyway, thanks for visiting. Feel free to DM me about anything!</p>
           <div class="about-links"><a class="text-link" href="#selected">Selected projects</a><a class="text-link" href="#practice">Creative practice</a></div>
@@ -200,14 +224,14 @@
             <span class="project-kind">Open project ↓</span>
           </button>
           <div class="project-detail" id="game-developing-detail" hidden>
-            <div class="project-detail-head"><p class="eyebrow">01 / Case study</p><a class="project-pdf-link" href="资源库/selected%20project%201/1-1_merged.pdf" target="_blank" rel="noreferrer">Open full project PDF ↗</a></div>
+            <div class="project-detail-head"><p class="eyebrow">01 / Case study</p><a class="project-pdf-link" href="assets/selected%20project%201/1-1_merged.pdf" target="_blank" rel="noreferrer">Open full project PDF ↗</a></div>
             <div class="project-carousel" data-carousel aria-label="Game developing project carousel">
               <div class="project-gallery" tabindex="0" aria-label="Game developing project pages">
-                <figure class="project-slide" aria-label="Page 1 of 5"><a class="project-page" href="资源库/selected%20project%201/1-1.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%201/preview/page-01.png" srcset="资源库/selected%20project%201/preview/page-01.png 1100w, 资源库/selected%20project%201/preview/page-01@1600.png 1600w, 资源库/selected%20project%201/preview/page-01@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 1" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 2 of 5"><a class="project-page" href="资源库/selected%20project%201/1-2.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%201/preview/page-02.png" srcset="资源库/selected%20project%201/preview/page-02.png 1100w, 资源库/selected%20project%201/preview/page-02@1600.png 1600w, 资源库/selected%20project%201/preview/page-02@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 2" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 3 of 5"><a class="project-page" href="资源库/selected%20project%201/1-3.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%201/preview/page-03.png" srcset="资源库/selected%20project%201/preview/page-03.png 1100w, 资源库/selected%20project%201/preview/page-03@1600.png 1600w, 资源库/selected%20project%201/preview/page-03@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 3" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 4 of 5"><a class="project-page" href="资源库/selected%20project%201/1-4.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%201/preview/page-04.png" srcset="资源库/selected%20project%201/preview/page-04.png 1100w, 资源库/selected%20project%201/preview/page-04@1600.png 1600w, 资源库/selected%20project%201/preview/page-04@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 4" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 5 of 5"><a class="project-page" href="资源库/selected%20project%201/1-5.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%201/preview/page-05.png" srcset="资源库/selected%20project%201/preview/page-05.png 1100w, 资源库/selected%20project%201/preview/page-05@1600.png 1600w, 资源库/selected%20project%201/preview/page-05@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 5" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 1 of 5"><a class="project-page" href="assets/selected%20project%201/1-1.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%201/preview/page-01.png" srcset="assets/selected%20project%201/preview/page-01.png 1100w, assets/selected%20project%201/preview/page-01@1600.png 1600w, assets/selected%20project%201/preview/page-01@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 1" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 2 of 5"><a class="project-page" href="assets/selected%20project%201/1-2.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%201/preview/page-02.png" srcset="assets/selected%20project%201/preview/page-02.png 1100w, assets/selected%20project%201/preview/page-02@1600.png 1600w, assets/selected%20project%201/preview/page-02@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 2" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 3 of 5"><a class="project-page" href="assets/selected%20project%201/1-3.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%201/preview/page-03.png" srcset="assets/selected%20project%201/preview/page-03.png 1100w, assets/selected%20project%201/preview/page-03@1600.png 1600w, assets/selected%20project%201/preview/page-03@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 3" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 4 of 5"><a class="project-page" href="assets/selected%20project%201/1-4.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%201/preview/page-04.png" srcset="assets/selected%20project%201/preview/page-04.png 1100w, assets/selected%20project%201/preview/page-04@1600.png 1600w, assets/selected%20project%201/preview/page-04@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 4" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 5 of 5"><a class="project-page" href="assets/selected%20project%201/1-5.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%201/preview/page-05.png" srcset="assets/selected%20project%201/preview/page-05.png 1100w, assets/selected%20project%201/preview/page-05@1600.png 1600w, assets/selected%20project%201/preview/page-05@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Game developing project page 5" loading="lazy"></a></figure>
               </div>
               <div class="carousel-controls">
                 <button class="carousel-arrow" type="button" data-previous aria-label="Previous page">←</button>
@@ -231,11 +255,11 @@
             <div class="project-detail-head"><p class="eyebrow">02 / Case study</p><span class="project-detail-hint">Select a page to open its PDF</span></div>
             <div class="project-carousel" data-carousel aria-label="Visual storytelling project carousel">
               <div class="project-gallery" tabindex="0" aria-label="Visual storytelling project pages">
-                <figure class="project-slide" aria-label="Page 1 of 5"><a class="project-page" href="资源库/selected%20project%202/2-1.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%202/preview/page-01.png" srcset="资源库/selected%20project%202/preview/page-01.png 1400w, 资源库/selected%20project%202/preview/page-01@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 1" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 2 of 5"><a class="project-page" href="资源库/selected%20project%202/2-2.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%202/preview/page-02.png" srcset="资源库/selected%20project%202/preview/page-02.png 1400w, 资源库/selected%20project%202/preview/page-02@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 2" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 3 of 5"><a class="project-page" href="资源库/selected%20project%202/2-3.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%202/preview/page-03.png" srcset="资源库/selected%20project%202/preview/page-03.png 1400w, 资源库/selected%20project%202/preview/page-03@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 3" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 4 of 5"><a class="project-page" href="资源库/selected%20project%202/2-4.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%202/preview/page-04.png" srcset="资源库/selected%20project%202/preview/page-04.png 1400w, 资源库/selected%20project%202/preview/page-04@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 4" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 5 of 5"><a class="project-page" href="资源库/selected%20project%202/2-5.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%202/preview/page-05.png" srcset="资源库/selected%20project%202/preview/page-05.png 1400w, 资源库/selected%20project%202/preview/page-05@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 5" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 1 of 5"><a class="project-page" href="assets/selected%20project%202/2-1.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%202/preview/page-01.png" srcset="assets/selected%20project%202/preview/page-01.png 1400w, assets/selected%20project%202/preview/page-01@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 1" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 2 of 5"><a class="project-page" href="assets/selected%20project%202/2-2.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%202/preview/page-02.png" srcset="assets/selected%20project%202/preview/page-02.png 1400w, assets/selected%20project%202/preview/page-02@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 2" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 3 of 5"><a class="project-page" href="assets/selected%20project%202/2-3.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%202/preview/page-03.png" srcset="assets/selected%20project%202/preview/page-03.png 1400w, assets/selected%20project%202/preview/page-03@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 3" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 4 of 5"><a class="project-page" href="assets/selected%20project%202/2-4.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%202/preview/page-04.png" srcset="assets/selected%20project%202/preview/page-04.png 1400w, assets/selected%20project%202/preview/page-04@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 4" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 5 of 5"><a class="project-page" href="assets/selected%20project%202/2-5.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%202/preview/page-05.png" srcset="assets/selected%20project%202/preview/page-05.png 1400w, assets/selected%20project%202/preview/page-05@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Visual storytelling project page 5" loading="lazy"></a></figure>
               </div>
               <div class="carousel-controls">
                 <button class="carousel-arrow" type="button" data-previous aria-label="Previous page">←</button>
@@ -259,10 +283,10 @@
             <div class="project-detail-head"><p class="eyebrow">03 / Case study</p><span class="project-detail-hint">Select a page to open its PDF</span></div>
             <div class="project-carousel" data-carousel aria-label="Interactive installation project carousel">
               <div class="project-gallery" tabindex="0" aria-label="Interactive installation project pages">
-                <figure class="project-slide" aria-label="Page 1 of 4"><a class="project-page" href="资源库/selected%20project%203/3-1.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%203/preview/page-01.png" srcset="资源库/selected%20project%203/preview/page-01.png 1400w, 资源库/selected%20project%203/preview/page-01@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Interactive installation project page 1" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 2 of 4"><a class="project-page" href="资源库/selected%20project%203/3-2.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%203/preview/page-02.png" srcset="资源库/selected%20project%203/preview/page-02.png 1400w, 资源库/selected%20project%203/preview/page-02@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Interactive installation project page 2" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 3 of 4"><a class="project-page" href="资源库/selected%20project%203/3-3.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%203/preview/page-03.png" srcset="资源库/selected%20project%203/preview/page-03.png 1400w, 资源库/selected%20project%203/preview/page-03@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Interactive installation project page 3" loading="lazy"></a></figure>
-                <figure class="project-slide" aria-label="Page 4 of 4"><a class="project-page" href="资源库/selected%20project%203/3-4.pdf" target="_blank" rel="noreferrer"><img src="资源库/selected%20project%203/preview/page-04.png" srcset="资源库/selected%20project%203/preview/page-04.png 1400w, 资源库/selected%20project%203/preview/page-04@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Interactive installation project page 4" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 1 of 4"><a class="project-page" href="assets/selected%20project%203/3-1.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%203/preview/page-01.png" srcset="assets/selected%20project%203/preview/page-01.png 1400w, assets/selected%20project%203/preview/page-01@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Interactive installation project page 1" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 2 of 4"><a class="project-page" href="assets/selected%20project%203/3-2.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%203/preview/page-02.png" srcset="assets/selected%20project%203/preview/page-02.png 1400w, assets/selected%20project%203/preview/page-02@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Interactive installation project page 2" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 3 of 4"><a class="project-page" href="assets/selected%20project%203/3-3.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%203/preview/page-03.png" srcset="assets/selected%20project%203/preview/page-03.png 1400w, assets/selected%20project%203/preview/page-03@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Interactive installation project page 3" loading="lazy"></a></figure>
+                <figure class="project-slide" aria-label="Page 4 of 4"><a class="project-page" href="assets/selected%20project%203/3-4.pdf" target="_blank" rel="noreferrer"><img src="assets/selected%20project%203/preview/page-04.png" srcset="assets/selected%20project%203/preview/page-04.png 1400w, assets/selected%20project%203/preview/page-04@2x.png 2640w" sizes="(max-width: 760px) calc(100vw - 40px), min(1320px, calc(100vw - 112px))" width="2640" height="1485" alt="Interactive installation project page 4" loading="lazy"></a></figure>
               </div>
               <div class="carousel-controls">
                 <button class="carousel-arrow" type="button" data-previous aria-label="Previous page">←</button>
@@ -280,21 +304,31 @@
     </section>
     <section class="page-screen section shell" id="practice">
       <div class="section-head">
-        <h2 class="section-title">Creative Practice</h2>
+        <h2 class="section-title">Some Other Little Practice</h2>
       </div>
       <div class="practice-board" aria-label="Creative practice projects">
-        <div class="practice-card" data-rectangle="2" aria-hidden="true"><span class="practice-image"></span></div>
-        <div class="practice-card" data-rectangle="1" aria-hidden="true"><span class="practice-image"></span></div>
-        <div class="practice-card" data-rectangle="3" aria-hidden="true"><span class="practice-image"></span></div>
-        <div class="practice-card" data-rectangle="4" aria-hidden="true"><span class="practice-image"></span></div>
-        <div class="practice-card" data-rectangle="5" aria-hidden="true"><span class="practice-image"></span></div>
-        <div class="practice-card" data-rectangle="6" aria-hidden="true"><span class="practice-image"></span></div>
-        <div class="practice-card" data-rectangle="7" aria-hidden="true"><span class="practice-image"></span></div>
-        <div class="practice-card" data-rectangle="8" aria-hidden="true"><span class="practice-image"></span></div>
+        <button class="practice-card" type="button" data-project="menu" data-practice-open="menu" aria-label="Open project: Menu">
+          <img src="assets/creative%20practice/project_1/cover.png" alt="">
+        </button>
+        <button class="practice-card" type="button" data-project="as-long-as-im-here" data-practice-open="as-long-as-im-here" aria-label="Open project: As Long As I'm Here">
+          <img src="assets/creative%20practice/project_2/cover.jpg" alt="">
+        </button>
       </div>
     <footer class="footer"><a class="wordmark" href="#home">Yilin Lyu</a><span>Personal portfolio · 2026</span><a href="mailto:lyuelaine2284@gmail.com">Contact ↗</a></footer>
     </section>
   </main>
+  <dialog class="practice-dialog" id="practice-dialog" aria-labelledby="practice-dialog-title">
+      <div class="practice-dialog-head">
+        <div><p class="eyebrow">Creative Practice</p><h2 class="practice-dialog-title" id="practice-dialog-title"></h2><p class="practice-dialog-copy" id="practice-dialog-copy"></p></div>
+        <button class="practice-dialog-close" type="button" id="practice-dialog-close" aria-label="Close project">×</button>
+      </div>
+      <div class="practice-viewer" aria-label="Project images">
+        <button class="carousel-arrow" type="button" id="practice-previous" aria-label="Previous image">←</button>
+        <div class="practice-gallery" id="practice-gallery" tabindex="0" aria-label="Swipe through project images"></div>
+        <button class="carousel-arrow" type="button" id="practice-next" aria-label="Next image">→</button>
+      </div>
+      <div class="practice-dialog-foot"><span class="practice-slide-count" id="practice-slide-count" aria-live="polite"></span><a class="practice-open-pdf" id="practice-open-pdf" href="#" target="_blank" rel="noreferrer" hidden>Open this page as PDF ↗</a></div>
+  </dialog>
   <script>
     const toggle = document.getElementById('about-toggle');
     const about = document.getElementById('about');
@@ -416,6 +450,95 @@
         }
       });
     });
+    const practiceProjects = {
+      menu: {
+        title: "Menu",
+        description: "Menu is a visual storytelling project still very much in progress. I haven't finished the layout design and the edition of the final video yet... anyway, will work this out one day ( ˙ε . )？",
+        slides: [
+          { image: "assets/creative%20practice/project_1/preview/page-01.png", pdf: "assets/creative%20practice/project_1/2.pdf" },
+          { image: "assets/creative%20practice/project_1/preview/page-02.png", pdf: "assets/creative%20practice/project_1/3.pdf" },
+          { image: "assets/creative%20practice/project_1/preview/page-03.png", pdf: "assets/creative%20practice/project_1/4.pdf" },
+          { image: "assets/creative%20practice/project_1/preview/page-04.png", pdf: "assets/creative%20practice/project_1/5.pdf" }
+        ]
+      },
+      "as-long-as-im-here": {
+        title: "As Long As I'm Here",
+        description: "This is a work I made during my MA. I appropriated the image of a censored statue, and eventually took the piece to do a flash mob in front of the Chinese Embassy.",
+        // Keep source filename order: pic 1 is the wide shot; pic 2 is the close-up.
+        slides: [
+          { image: "assets/creative%20practice/project_2/preview/frame-v3-01.jpg", original: "assets/creative%20practice/project_2/pic%201.jpg?v=2" },
+          { image: "assets/creative%20practice/project_2/preview/frame-v3-02.jpg", original: "assets/creative%20practice/project_2/pic%202.jpg?v=2" },
+          { image: "assets/creative%20practice/project_2/preview/frame-v3-03.jpg", original: "assets/creative%20practice/project_2/pic%203.jpg?v=2" },
+          { image: "assets/creative%20practice/project_2/preview/frame-v3-04.jpg", original: "assets/creative%20practice/project_2/pic%204.jpg?v=2" },
+          { image: "assets/creative%20practice/project_2/preview/frame-v3-05.jpg", original: "assets/creative%20practice/project_2/pic%205.jpg?v=2" },
+          { image: "assets/creative%20practice/project_2/preview/frame-v3-06.jpg", original: "assets/creative%20practice/project_2/cover.jpg?v=2" }
+        ]
+      }
+    };
+    const practiceDialog = document.getElementById("practice-dialog");
+    const practiceGallery = document.getElementById("practice-gallery");
+    const practicePdfLink = document.getElementById("practice-open-pdf");
+    function syncPracticeCarousel() {
+      const width = practiceGallery.clientWidth || 1;
+      const slides = Array.from(practiceGallery.children);
+      const index = Math.max(0, Math.min(slides.length - 1, Math.round(practiceGallery.scrollLeft / width)));
+      document.getElementById("practice-slide-count").textContent = `${String(index + 1).padStart(2,"0")} / ${String(slides.length).padStart(2,"0")}`;
+      document.getElementById("practice-previous").disabled = index === 0;
+      document.getElementById("practice-next").disabled = index === slides.length - 1;
+      const slide = practiceProjects[practiceDialog.dataset.project]?.slides[index];
+      const source = slide?.pdf || slide?.original;
+      practicePdfLink.hidden = !source;
+      if (source) {
+        practicePdfLink.href = source;
+        practicePdfLink.textContent = slide.pdf ? "Open this page as PDF ↗" : "Open original image ↗";
+      }
+    }
+    function openPracticeProject(id) {
+      const project = practiceProjects[id];
+      if (!project) return;
+      practiceDialog.dataset.project = id;
+      document.getElementById("practice-dialog-title").textContent = project.title;
+      document.getElementById("practice-dialog-copy").textContent = project.description;
+      practiceGallery.replaceChildren(...project.slides.map((slide, index) => {
+        const figure = document.createElement("figure");
+        figure.className = "practice-slide";
+        figure.setAttribute("aria-label", `Image ${index + 1} of ${project.slides.length}`);
+        const image = document.createElement("img");
+        image.src = slide.image;
+        image.alt = `${project.title}, image ${index + 1} of ${project.slides.length}`;
+        image.loading = index === 0 ? "eager" : "lazy";
+        if (slide.pdf || slide.original) {
+          const link = document.createElement("a");
+          link.href = slide.pdf || slide.original;
+          link.target = "_blank";
+          link.rel = "noreferrer";
+          link.setAttribute("aria-label", slide.pdf ? `Open PDF page ${index + 1}` : `Open original image ${index + 1}`);
+          link.append(image);
+          figure.append(link);
+        } else figure.append(image);
+        return figure;
+      }));
+      practiceGallery.scrollLeft = 0;
+      practiceDialog.showModal();
+      syncPracticeCarousel();
+    }
+    document.querySelectorAll("[data-practice-open]").forEach((card) => card.addEventListener("click", () => openPracticeProject(card.dataset.practiceOpen)));
+    document.getElementById("practice-dialog-close").addEventListener("click", () => practiceDialog.close());
+    practiceDialog.addEventListener("click", (event) => { if (event.target === practiceDialog) practiceDialog.close(); });
+    practiceGallery.addEventListener("scroll", () => requestAnimationFrame(syncPracticeCarousel), { passive: true });
+    practiceGallery.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      const offset = event.key === "ArrowRight" ? 1 : -1;
+      const index = Math.round(practiceGallery.scrollLeft / (practiceGallery.clientWidth || 1));
+      practiceGallery.scrollTo({ left: (index + offset) * practiceGallery.clientWidth, behavior: "smooth" });
+    });
+    function movePracticeSlide(offset) {
+      const index = Math.round(practiceGallery.scrollLeft / (practiceGallery.clientWidth || 1));
+      practiceGallery.scrollTo({ left: (index + offset) * practiceGallery.clientWidth, behavior: "smooth" });
+    }
+    document.getElementById("practice-previous").addEventListener("click", () => movePracticeSlide(-1));
+    document.getElementById("practice-next").addEventListener("click", () => movePracticeSlide(1));
   </script>
 </body>
 </html>

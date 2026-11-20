@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Creative Practice — Layout Playground</title>
+  <style>
+    :root { color-scheme: light; --ink:#211f1a; --muted:#77736b; --line:#e5e1d8; --paper:#fff; --accent:#786b54; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#f7f6f2; color:var(--ink); font:13px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    button,input { font:inherit; }
+    .shell { width:min(1500px,calc(100% - 48px)); margin:0 auto; }
+    header { display:flex; align-items:end; justify-content:space-between; gap:24px; padding:24px 0 17px; border-bottom:1px solid var(--line); }
+    .kicker { margin:0 0 5px; color:var(--muted); font-size:10px; letter-spacing:.15em; text-transform:uppercase; }
+    h1 { margin:0; font:400 clamp(22px,3vw,32px)/1.1 Georgia,"Times New Roman",serif; }
+    .intro { max-width:390px; margin:0; color:#666259; font-size:12px; text-align:right; }
+    .toolbar { display:grid; grid-template-columns:repeat(7,minmax(120px,1fr)); gap:12px; padding:16px 0 12px; }
+    .control { min-width:0; padding:11px 12px 9px; border:1px solid var(--line); background:#fff; }
+    .control-top { display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:8px; }
+    .control label,.control-title { font-size:11px; }
+    output { color:var(--muted); font-size:10px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    input[type="range"] { display:block; width:100%; height:18px; margin:0; accent-color:var(--accent); cursor:pointer; }
+    select { width:100%; height:25px; border:1px solid var(--line); background:#fff; color:var(--ink); font:inherit; }
+    .hint { display:block; margin-top:3px; color:#89857c; font-size:9px; }
+    .tools { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:2px 0 13px; }
+    .tools button { min-height:32px; padding:0 13px; border:1px solid var(--line); background:#fff; color:var(--ink); cursor:pointer; }
+    .tools button:hover { border-color:#a49b88; }
+    .tools .primary { border-color:var(--ink); background:var(--ink); color:#fff; }
+    .check-control { display:flex; align-items:center; gap:7px; min-height:32px; margin-left:auto; padding:0 9px; color:#5f5b53; }
+    .check-control input { accent-color:var(--accent); }
+    .selection { margin-left:4px; color:var(--muted); font-size:10px; }
+    .stage-meta { display:flex; justify-content:space-between; gap:16px; padding:8px 0; color:var(--muted); font-size:10px; letter-spacing:.06em; text-transform:uppercase; }
+    .stage { position:relative; width:100%; height:auto; aspect-ratio:2.2 / 1; overflow:hidden; border:1px solid #e4e0d7; background:#fff; }
+    .stage::before { position:absolute; inset:0; background-image:linear-gradient(to right,rgba(80,76,65,.025) 1px,transparent 1px),linear-gradient(to bottom,rgba(80,76,65,.025) 1px,transparent 1px); background-size:48px 48px; content:""; pointer-events:none; }
+    .frame { position:absolute; aspect-ratio:2/3; background:#FFFBEB; box-shadow:1px 3px 2px -1px rgba(0,0,0,.15); cursor:grab; transform:translate(-50%,-50%); transform-origin:center; transition:left .22s ease,top .22s ease,width .22s ease,transform .22s ease,box-shadow .2s ease; touch-action:none; }
+    .frame:active { cursor:grabbing; }
+    .frame.selected { z-index:2; box-shadow:1px 3px 2px -1px rgba(0,0,0,.15),0 0 0 1px #8e8068; }
+    .status { min-height:20px; padding:4px 0 14px; color:#766f61; font-size:10px; }
+    .export { position:absolute; width:1px; height:1px; overflow:hidden; opacity:0; }
+    .export.visible { position:relative; display:block; width:100%; height:180px; margin:0 0 14px; padding:10px; overflow:auto; opacity:1; border:1px solid var(--line); background:#fff; color:#49453e; font:11px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace; }
+    @media(max-width:1050px) { .toolbar { grid-template-columns:repeat(4,minmax(120px,1fr)); } }
+    @media(max-width:640px) {
+      .shell { width:calc(100% - 28px); }
+      header { display:block; padding-top:18px; }
+      .intro { margin-top:10px; text-align:left; }
+      .toolbar { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+      .control { padding:9px; }
+      .check-control { margin-left:0; }
+      .stage::before { background-size:32px 32px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div><p class="kicker">Creative Practice / Layout Study</p><h1>Loose frames, live controls</h1></div>
+      <p class="intro">拖动方框或使用控制器。先调出你喜欢的散乱程度，再把设置发给我，我会照着更新网站。</p>
+    </header>
+
+    <section class="toolbar" aria-label="排版控制器">
+      <div class="control"><div class="control-top"><label for="size">方框大小</label><output id="size-value"></output></div><input id="size" type="range" min="7" max="19" step="0.5" value="12.5"><span class="hint">相对预览宽度，等比缩放</span></div>
+      <div class="control"><div class="control-top"><label for="frame-count">方框数量</label><output id="frame-count-value">8 个</output></div><select id="frame-count" aria-label="选择方框数量"></select><span class="hint">预览和导出数据同步更新</span></div>
+      <div class="control"><div class="control-top"><label for="base-angle">整体倾斜</label><output id="base-angle-value"></output></div><input id="base-angle" type="range" min="-20" max="20" step="1" value="0"><span class="hint">所有方框共享的基础角度</span></div>
+      <div class="control"><div class="control-top"><label for="angle-range">倾斜幅度</label><output id="angle-range-value"></output></div><input id="angle-range" type="range" min="0" max="45" step="1" value="24"><span class="hint">单个方框最多偏离整体角度</span></div>
+      <div class="control"><div class="control-top"><label for="angle-chaos">角度混乱程度</label><output id="angle-chaos-value"></output></div><input id="angle-chaos" type="range" min="0" max="100" step="1" value="85"><span class="hint">低：角度接近；高：差异更明显</span></div>
+      <div class="control"><div class="control-top"><label for="position-chaos">位置随机程度</label><output id="position-chaos-value"></output></div><input id="position-chaos" type="range" min="0" max="100" step="1" value="88"><span class="hint">在松散基准位置与随机散布间切换</span></div>
+      <div class="control"><div class="control-top"><label for="selected-angle">单框角度</label><output id="selected-angle-value"></output></div><input id="selected-angle" type="range" min="-50" max="50" step="1" value="0"><span class="hint">先点选预览中的方框再单独调整</span></div>
+    </section>
+
+    <div class="tools">
+      <button class="primary" id="shuffle" type="button">重新随机排布 ↻</button>
+      <button id="reset" type="button">恢复初始设置</button>
+      <button id="copy" type="button">复制排版数据</button>
+      <span class="selection" id="selection-label">当前选择：方框 1</span>
+      <label class="check-control"><input id="overlap" type="checkbox">允许方框相互重叠</label>
+    </div>
+
+    <div class="stage-meta"><span id="stage-count">Live preview · 8 frames</span><span id="stage-size"></span></div>
+    <section class="stage" id="stage" aria-label="方框的实时排版预览"></section>
+    <div class="status" id="status" aria-live="polite">点选方框可单独调整角度；拖动方框可直接移动。</div>
+    <textarea class="export" id="export" aria-hidden="true" tabindex="-1"></textarea>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const stage = $("stage");
+    const frames = [];
+    const defaultAnchors = [
+      {x:.13,y:.23},{x:.41,y:.15},{x:.75,y:.24},{x:.88,y:.47},
+      {x:.25,y:.73},{x:.55,y:.79},{x:.82,y:.81},{x:.54,y:.46}
+    ];
+    let frameCount = 8;
+    let targets = [];
+    let noise = [];
+    let selected = 0;
+    let overrides = Array(frameCount).fill(null);
+    const controls = ["size","base-angle","angle-range","angle-chaos","position-chaos","selected-angle","overlap"];
+
+    function randomize() {
+      targets = Array.from({length:frameCount},() => ({x:.09 + Math.random()*.82,y:.1 + Math.random()*.8}));
+      noise = Array.from({length:frameCount},() => Math.random()*2-1);
+      overrides = Array(frameCount).fill(null);
+      render();
+    }
+    function value(id) { return Number($(id).value); }
+    function frameAngle(index) {
+      if (overrides[index] !== null) return overrides[index];
+      const base = value("base-angle");
+      const spread = value("angle-range") * value("angle-chaos") / 100;
+      return base + noise[index] * spread;
+    }
+    function dimensions() {
+      const rect = stage.getBoundingClientRect();
+      const width = Math.max(1,rect.width * value("size") / 100);
+      return {stageWidth:rect.width,stageHeight:rect.height,width,height:width*1.5};
+    }
+    function extents(angle,width,height) {
+      const rad = Math.abs(angle)*Math.PI/180;
+      return {w:width*Math.cos(rad)+height*Math.sin(rad),h:height*Math.cos(rad)+width*Math.sin(rad)};
+    }
+    function getPoints() {
+      const d = dimensions();
+      const mix = value("position-chaos")/100;
+      const points = Array.from({length:frameCount},(_,i) => ({anchor:anchorFor(i),i})).map(({anchor,i}) => ({
+        x:(anchor.x*(1-mix)+targets[i].x*mix)*d.stageWidth,
+        y:(anchor.y*(1-mix)+targets[i].y*mix)*d.stageHeight
+      }));
+      if ($("overlap").checked) return points;
+      const ex = Array.from({length:frameCount},(_,i)=>extents(frameAngle(i),d.width,d.height));
+      for(let pass=0;pass<70;pass++) {
+        let moved=false;
+        for(let i=0;i<points.length;i++) for(let j=i+1;j<points.length;j++) {
+          const dx=points[j].x-points[i].x, dy=points[j].y-points[i].y;
+          const px=(ex[i].w+ex[j].w)/2+10-Math.abs(dx);
+          const py=(ex[i].h+ex[j].h)/2+10-Math.abs(dy);
+          if(px>0&&py>0) {
+            moved=true;
+            if(px<py) { const shift=px/2+1; const dir=dx===0?(i%2?1:-1):Math.sign(dx); points[i].x-=dir*shift; points[j].x+=dir*shift; }
+            else { const shift=py/2+1; const dir=dy===0?(i%2?1:-1):Math.sign(dy); points[i].y-=dir*shift; points[j].y+=dir*shift; }
+          }
+        }
+        points.forEach((p,i)=>{p.x=Math.max(ex[i].w/2+8,Math.min(d.stageWidth-ex[i].w/2-8,p.x));p.y=Math.max(ex[i].h/2+8,Math.min(d.stageHeight-ex[i].h/2-8,p.y));});
+        if(!moved) break;
+      }
+      return points;
+    }
+    function render() {
+      const d=dimensions();
+      const points=getPoints();
+      $("stage-size").textContent=`${Math.round(d.stageWidth)} × ${Math.round(d.stageHeight)} px`;
+      frames.forEach((el,i)=>{
+        el.style.width=`${d.width}px`;
+        el.style.left=`${points[i].x}px`;
+        el.style.top=`${points[i].y}px`;
+        el.style.transform=`translate(-50%,-50%) rotate(${frameAngle(i)}deg)`;
+        el.classList.toggle("selected",i===selected);
+      });
+      updateReadouts();
+    }
+    function updateReadouts() {
+      const d=dimensions();
+      $("size-value").textContent=`${value("size")}% · ${Math.round(d.width)} px`;
+      $("base-angle-value").textContent=`${value("base-angle")}°`;
+      $("angle-range-value").textContent=`±${value("angle-range")}°`;
+      $("angle-chaos-value").textContent=`${value("angle-chaos")}%`;
+      $("position-chaos-value").textContent=`${value("position-chaos")}%`;
+      $("selected-angle").value=Math.round(frameAngle(selected));
+      $("selected-angle-value").textContent=`${Math.round(frameAngle(selected))}°`;
+      $("selection-label").textContent=`当前选择：方框 ${selected+1}`;
+    }
+    function selectFrame(index) { selected=index; updateReadouts(); frames.forEach((el,i)=>el.classList.toggle("selected",i===selected)); }
+    function dragFrame(el,index) {
+      let start=null;
+      el.addEventListener("pointerdown",e=>{start={x:e.clientX,y:e.clientY,left:parseFloat(el.style.left),top:parseFloat(el.style.top)};el.setPointerCapture(e.pointerId);selectFrame(index);});
+      el.addEventListener("pointermove",e=>{if(!start)return;const rect=stage.getBoundingClientRect();el.style.left=`${Math.max(0,Math.min(rect.width,start.left+e.clientX-start.x))}px`;el.style.top=`${Math.max(0,Math.min(rect.height,start.top+e.clientY-start.y))}px`;});
+      el.addEventListener("pointerup",()=>{if(!start)return;const rect=stage.getBoundingClientRect();targets[index]={x:parseFloat(el.style.left)/rect.width,y:parseFloat(el.style.top)/rect.height};$("position-chaos").value=100;start=null;updateReadouts();});
+    }
+    for(let i=1;i<=20;i++) { const option=document.createElement("option"); option.value=String(i); option.textContent=`${i} 个`; if(i===8) option.selected=true; $("frame-count").append(option); }
+    function anchorFor(i) {
+      if(defaultAnchors[i]) return defaultAnchors[i];
+      const angle=i*2.399963229728653, radius=.13+.34*Math.sqrt((i-7)/13);
+      return {x:Math.max(.09,Math.min(.91,.5+Math.cos(angle)*radius)),y:Math.max(.12,Math.min(.88,.5+Math.sin(angle)*radius))};
+    }
+    function syncFrames(count) {
+      frameCount=count;
+      while(frames.length>count) frames.pop().remove();
+      while(frames.length<count) {
+        const i=frames.length, el=document.createElement("div");
+        el.className="frame"; el.setAttribute("role","button"); el.setAttribute("aria-label",`方框 ${i+1}`);
+        el.addEventListener("click",()=>selectFrame(Number(el.dataset.index)));
+        stage.append(el); frames.push(el); dragFrame(el,i);
+      }
+      frames.forEach((el,i)=>{el.dataset.index=String(i);el.setAttribute("aria-label",`方框 ${i+1}`);});
+      targets=Array.from({length:count},(_,i)=>targets[i]||{x:.09+Math.random()*.82,y:.1+Math.random()*.8});
+      noise=Array.from({length:count},(_,i)=>noise[i]??(Math.random()*2-1));
+      overrides=Array.from({length:count},(_,i)=>overrides[i]??null);
+      selected=Math.min(selected,count-1);
+      $("frame-count-value").textContent=`${count} 个`;
+      $("stage-count").textContent=`Live preview · ${count} frame${count===1?"":"s"}`;
+      stage.setAttribute("aria-label",`${count} 个方框的实时排版预览`);
+      render();
+    }
+    syncFrames(frameCount);
+    $("frame-count").addEventListener("change",()=>syncFrames(Number($("frame-count").value)));
+    controls.forEach(id=>$(id).addEventListener("input",()=>{ if(id==="selected-angle"){overrides[selected]=value(id);} render(); }));
+    $("shuffle").addEventListener("click",randomize);
+    $("reset").addEventListener("click",()=>{ $("frame-count").value="8";syncFrames(8);$("size").value=12.5;$("base-angle").value=0;$("angle-range").value=24;$("angle-chaos").value=85;$("position-chaos").value=88;$("overlap").checked=false;selected=0;randomize();$("status").textContent="已恢复初始控制值，并生成一组新的散布位置。"; });
+    $("copy").addEventListener("click",async()=>{
+      const d=dimensions(),points=getPoints();
+      const data={frameCount,frameWidthPercent:value("size"),baseAngle:value("base-angle"),angleSpread:value("angle-range"),angleChaos:value("angle-chaos"),positionChaos:value("position-chaos"),allowOverlap:$("overlap").checked,frames:points.map((p,i)=>({x:+(p.x/d.stageWidth*100).toFixed(2),y:+(p.y/d.stageHeight*100).toFixed(2),rotation:+frameAngle(i).toFixed(1)}))};
+      const text=JSON.stringify(data,null,2);$("export").value=text;
+      try { await navigator.clipboard.writeText(text);$("status").textContent="排版数据已复制。把数据发给我，我就能按这组效果更新网站。"; }
+      catch { $("export").classList.add("visible");$("export").focus();$("export").select();$("status").textContent="已生成排版数据。请按 ⌘C 复制下面的内容，再发给我。"; }
+    });
+    window.addEventListener("resize",render);
+    randomize();
+  </script>
+</body>
+</html>
